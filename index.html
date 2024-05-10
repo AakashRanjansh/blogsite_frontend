@@ -147,12 +147,19 @@
             <p id="modalContent"></p>
             <p id="modalCategory"></p>
             <p id="modalCreatedOn"></p>
+
+            <p id="modalUpdatedAt"></p>
+            <p id="modalIsEdited"></p>
+            <h3 id="modalUpVoteCount"></h3>
+            <h3 id="modalDownVoteCount"></h3>
+
             <hr>
             <h3>User Details</h3>
             <p id="modalUserName"></p>
             <p id="modalUserEmail"></p>
             <p id="modalUserPhone"></p>
             <p id="modalUserRole"></p>
+
         </div>
     </div>
 
@@ -201,6 +208,12 @@
                             document.getElementById('modalContent').textContent = blogPost.content;
                             document.getElementById('modalCategory').textContent = `Category: ${blogPost.category}`;
                             document.getElementById('modalCreatedOn').textContent = `Created On: ${blogPost.createdOn}`;
+
+                            document.getElementById('modalUpdatedAt').textContent = `Updated At: ${blogPost.updatedAt}`;
+                            document.getElementById('modalIsEdited').textContent = `Is Edited: ${blogPost.isEdited}`;
+                            document.getElementById('modalUpVoteCount').textContent = `Up Votes: ${blogPost.upVoteCount}`;
+                            document.getElementById('modalDownVoteCount').textContent = `Down Votes: ${blogPost.downVoteCount}`;
+
 
                             const user = blogPost.user;
                             document.getElementById('modalUserName').textContent = `User Name: ${user.name}`;
