@@ -5,11 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blog Posts</title>
 <style>
+
+    
+
+
+
+
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
         background-color: #f5f5f5;
+
     }
 
     .container {
@@ -19,6 +26,9 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+
+
+      
     }
 
     .blog-card {
@@ -99,6 +109,7 @@
         margin: 20px auto;
         max-width: 800px;
         padding: 20px;
+        position: relative;
     }
 
     .close-btn {
@@ -107,6 +118,11 @@
         right: 20px;
         font-size: 24px;
         cursor: pointer;
+        color: #888;
+    }
+
+    .close-btn:hover {
+        color: #333;
     }
 
     #modalImage {
@@ -121,7 +137,11 @@
 
     <div class="modal" id="blogModal">
         <div class="modal-content">
+
+                
             <span class="close-btn">&times;</span>
+
+            
             <h2 id="modalTitle"></h2>
             <img id="modalImage" src="" alt="">
             <p id="modalContent"></p>
@@ -218,10 +238,10 @@
         });
 
         document.addEventListener('click', event => {
-            if (event.target.classList.contains('close-btn')) {
-                document.getElementById('blogModal').style.display = 'none';
-            }
-        });
+                if (event.target.classList.contains('close-btn')) {
+                    document.getElementById('blogModal').style.display = 'none';
+                }
+            });
     </script>
 </body>
 </html>
