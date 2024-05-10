@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog Posts</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .blog-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        width: calc(33.33% - 20px);
+        padding: 20px;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    .blog-card h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .blog-card .content-preview {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #666;
+        max-height: 120px;
+        overflow: hidden;
+    }
+
+    .blog-card .content-full {
+        display: none;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #666;
+    }
+
+    .blog-card .category {
+        font-size: 14px;
+        color: #888;
+    }
+
+    .blog-card .created-on {
+        font-size: 14px;
+        color: #888;
+    }
+
+    .blog-card img {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .read-more-btn {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+    <div class="container" id="blogList"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('https://localhost:7124/api/Blog/GetBlogs');
+                const blogs = await response.json();
+
+                const blogListDiv = document.getElementById('blogList');
+
+                blogs.forEach(blog => {
+                    const blogCard = document.createElement('div');
+                    blogCard.classList.add('blog-card');
+
+                    const title = document.createElement('h2');
+                    title.textContent = blog.title;
+
+                    const image = document.createElement('img');
+                    image.src = blog.imagePath;
+                    image.alt = blog.title;
+
+                    const contentPreview = document.createElement('div');
+                    contentPreview.classList.add('content-preview');
+                    contentPreview.textContent = blog.content.substring(0, 150) + '...';
+
+                    const contentFull = document.createElement('div');
+                    contentFull.classList.add('content-full');
+                    contentFull.textContent = blog.content;
+                    contentFull.style.display = 'none';
+
+                    const readMoreBtn = document.createElement('button');
+                    readMoreBtn.textContent = 'Read More';
+                    readMoreBtn.classList.add('read-more-btn');
+
+                    readMoreBtn.addEventListener('click', () => {
+                        contentPreview.style.display = 'none';
+                        contentFull.style.display = 'block';
+                        readMoreBtn.style.display = 'none';
+                    });
+
+                    const category = document.createElement('p');
+                    category.textContent = `Category: ${blog.category}`;
+                    category.classList.add('category');
+
+                    const createdOn = document.createElement('p');
+                    createdOn.textContent = `Created On: ${blog.createdOn}`;
+                    createdOn.classList.add('created-on');
+
+                    blogCard.appendChild(title);
+                    blogCard.appendChild(image);
+                    blogCard.appendChild(contentPreview);
+                    blogCard.appendChild(contentFull);
+                    blogCard.appendChild(readMoreBtn);
+                    blogCard.appendChild(category);
+                    blogCard.appendChild(createdOn);
+
+                    blogListDiv.appendChild(blogCard);
+                });
+            } catch (error) {
+                console.error('Error fetching blogs:', error);
+            }
+        });
+    </script>
+</body>
+</html>
+
+version 1 start
+
+
+version 2 start
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up</title>
+<link rel="stylesheet" href="signup.css">
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+    <div class="container" style="background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); padding: 30px; width: 400px;">
+        <h1 style="text-align: center; margin-bottom: 20px; color: #333;">Sign Up</h1>
+        <form id="signupForm">
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="name" style="display: block; margin-bottom: 5px; color: #555;">Name:</label>
+                <input type="text" id="name" name="name" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="email" style="display: block; margin-bottom: 5px; color: #555;">Email:</label>
+                <input type="email" id="email" name="email" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="password" style="display: block; margin-bottom: 5px; color: #555;">Password:</label>
+                <input type="password" id="password" name="password" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="phone" style="display: block; margin-bottom: 5px; color: #555;">Phone:</label>
+                <input type="text" id="phone" name="phone" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="role" style="display: block; margin-bottom: 5px; color: #555;">Role:</label>
+                <input type="text" id="role" name="role" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+
+            <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s ease;">Sign Up</button>
+            <div class="error-message" id="errorMessage" style="color: red; margin-bottom: 10px;"></div>
+        </form>
+        <p style="text-align: center;">Already have an account? <a href="login.html" style="color: #007bff;">Login</a></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupForm = document.getElementById('signupForm');
+            const errorMessage = document.getElementById('errorMessage');
+
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const phone = document.getElementById('phone').value;
+                const role = document.getElementById('role').value;
+
+                try {
+                    const response = await fetch('https://localhost:7124/api/User', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            id: 0,
+                            name: name,
+                            email: email,
+                            password: password,
+                            phone: phone,
+                            role: role,
+                        }),
+                    });
+
+                    if (response.ok) {
+                        alert('Sign up successful!');
+                        window.location.href = 'login.html'; // Redirect to login.html
+                    } else {
+                        const data = await response.json();
+                        errorMessage.textContent = data.message || 'Failed to sign up. Please try again.';
+                    }
+                } catch (error) {
+                    console.error('Error signing up:', error);
+                    errorMessage.textContent = 'Failed to sign up. Please try again later.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog Posts</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .blog-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        width: calc(33.33% - 20px);
+        padding: 20px;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    .blog-card h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .blog-card .content-preview {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #666;
+        max-height: 120px;
+        overflow: hidden;
+    }
+
+    .blog-card .content-full {
+        display: none;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #666;
+    }
+
+    .blog-card .category {
+        font-size: 14px;
+        color: #888;
+    }
+
+    .blog-card .created-on {
+        font-size: 14px;
+        color: #888;
+    }
+
+    .blog-card img {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .read-more-btn {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        max-width: 800px;
+        padding: 20px;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    #modalImage {
+        max-width: 100%;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+    <div class="container" id="blogList"></div>
+
+    <div class="modal" id="blogModal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <img id="modalImage" src="" alt="">
+            <p id="modalContent"></p>
+            <p id="modalCategory"></p>
+            <p id="modalCreatedOn"></p>
+            <hr>
+            <h3>User Details</h3>
+            <p id="modalUserName"></p>
+            <p id="modalUserEmail"></p>
+            <p id="modalUserPhone"></p>
+            <p id="modalUserRole"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('https://localhost:7124/api/Blog/GetBlogs');
+                const blogs = await response.json();
+
+                const blogListDiv = document.getElementById('blogList');
+
+                blogs.forEach(blog => {
+                    const blogCard = document.createElement('div');
+                    blogCard.classList.add('blog-card');
+
+                    const title = document.createElement('h2');
+                    title.textContent = blog.title;
+
+                    const image = document.createElement('img');
+                    image.src = blog.imagePath;
+                    image.alt = blog.title;
+
+                    const contentPreview = document.createElement('div');
+                    contentPreview.classList.add('content-preview');
+                    contentPreview.textContent = blog.content.substring(0, 150) + '...';
+
+                    const contentFull = document.createElement('div');
+                    contentFull.classList.add('content-full');
+                    contentFull.textContent = blog.content;
+                    contentFull.style.display = 'none';
+
+                    const readMoreBtn = document.createElement('button');
+                    readMoreBtn.textContent = 'Read More';
+                    readMoreBtn.classList.add('read-more-btn');
+
+                    readMoreBtn.addEventListener('click', async () => {
+                        try {
+                            const blogResponse = await fetch(`https://localhost:7124/api/Blog/${blog.id}`);
+                            const blogData = await blogResponse.json();
+
+                            const blogPost = blogData[0];
+
+                            document.getElementById('modalTitle').textContent = blogPost.title;
+                            document.getElementById('modalImage').src = blogPost.imagePath;
+                            document.getElementById('modalImage').alt = blogPost.title;
+                            document.getElementById('modalContent').textContent = blogPost.content;
+                            document.getElementById('modalCategory').textContent = `Category: ${blogPost.category}`;
+                            document.getElementById('modalCreatedOn').textContent = `Created On: ${blogPost.createdOn}`;
+
+                            const user = blogPost.user;
+                            document.getElementById('modalUserName').textContent = `User Name: ${user.name}`;
+                            document.getElementById('modalUserEmail').textContent = `Email: ${user.email}`;
+                            document.getElementById('modalUserPhone').textContent = `Phone: ${user.phone}`;
+                            document.getElementById('modalUserRole').textContent = `Role: ${user.role}`;
+
+                            document.getElementById('blogModal').style.display = 'block';
+                        } catch (error) {
+                            console.error('Error fetching individual blog:', error);
+                        }
+                    });
+
+                    const category = document.createElement('p');
+                    category.textContent = `Category: ${blog.category}`;
+                    category.classList.add('category');
+
+                    const createdOn = document.createElement('p');
+                    createdOn.textContent = `Created On: ${blog.createdOn}`;
+                    createdOn.classList.add('created-on');
+
+                    blogCard.appendChild(title);
+                    blogCard.appendChild(image);
+                    blogCard.appendChild(contentPreview);
+                    blogCard.appendChild(contentFull);
+                    blogCard.appendChild(readMoreBtn);
+                    blogCard.appendChild(category);
+                    blogCard.appendChild(createdOn);
+
+                    blogListDiv.appendChild(blogCard);
+                });
+            } catch (error) {
+                console.error('Error fetching blogs:', error);
+            }
+        });
+
+        document.addEventListener('click', event => {
+            if (event.target.classList.contains('close-btn')) {
+                document.getElementById('blogModal').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
